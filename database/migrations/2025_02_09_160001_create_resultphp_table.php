@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('result_php', function (Blueprint $table) {
-            $table->id('result_id');
+        Schema::create('results', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('test_id');
             $table->unsignedBigInteger('score');
             $table->timestampTz('time_finished');
 
-            $table->foreign('test_id')->references('test_id')->on('tests_php');
-            $table->foreign('user_id')->references('user_id')->on('users_php');
+            $table->foreign('test_id')->references('id')->on('tests');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('result_php');
+        Schema::dropIfExists('results');
     }
 };
