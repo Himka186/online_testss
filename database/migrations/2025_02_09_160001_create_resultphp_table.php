@@ -16,7 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('test_id');
             $table->unsignedBigInteger('score');
-            $table->timestampTz('time_finished');
+            $table->timestamp('time_finished');
+            $table->timestamps();
 
             $table->foreign('test_id')->references('id')->on('tests');
             $table->foreign('user_id')->references('id')->on('users');

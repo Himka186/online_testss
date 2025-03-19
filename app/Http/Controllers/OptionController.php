@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Option;
+use App\Models\Question;
+use App\Models\Test;
 use Illuminate\Http\Request;
 
 class OptionController extends Controller
@@ -12,8 +14,9 @@ class OptionController extends Controller
      */
     public function index()
     {
+        $options = Option::orderBy('id', 'asc')->get();
         return view('options', [
-            'options' => Option::all()
+            'options' => $options
         ]);
     }
 
@@ -22,7 +25,10 @@ class OptionController extends Controller
      */
     public function create()
     {
-        //
+        $questions = Question::orderBy('id', 'asc')->get();
+        return view('option_create', [
+            'questions' => $questions
+        ]);
     }
 
     /**
@@ -30,7 +36,14 @@ class OptionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+           'question_id' => 'required|integer|exists:questions,id',
+           'option_text' => 'required|string|max:255',
+           'is_correct' => 'boolean|nullable',
+        ]);
+        $option= new Option($validated);
+        $option->save();
+        return redirect('/option');
     }
 
     /**
@@ -48,7 +61,10 @@ class OptionController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return view('option_edit', [
+            'option' => Option::all()->where('id', $id)->first(),
+            'questions' => Question::all()
+        ]);
     }
 
     /**
@@ -56,14 +72,27 @@ class OptionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'question_id' => 'required|integer|exists:questions,id',
+            'option_text' => 'required|string|max:255',
+            'is_correct' => 'boolean|nullable',
+        ]);
+
+        $option = Option::all()->where('id', $id)->first();
+        $option->question_id = $validated['question_id'];
+        $option->option_text = $validated['option_text'];
+        $option->is_correct = $validated['is_correct'];
+        $option->save();
+        return redirect('/option');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
-        //
+        Option::destroy($id);
+        $redirectUrl = $request->input('redirect_url', '/option');
+        return redirect($redirectUrl);
     }
 }

@@ -11,6 +11,10 @@ class Question extends Model
 {
     use HasFactory;
     protected $table = 'questions';
+    protected $fillable = [
+        'test_id',
+        'question_text'
+    ];
     public function Test(): BelongsTo
     {
         return $this->belongsTo(Test::class);

@@ -11,7 +11,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsToManyMany;
 class Test extends Model
 {
     use HasFactory;
+
+    /**
+     * @var \Illuminate\Support\Carbon|mixed
+     */
+    //public mixed $created_time;
     protected $table = 'tests';
+    protected $fillable = [
+        'test_name',
+        'test_description',
+        'created_time'
+    ];
     public function questions(): HasMany
     {
         return $this->hasMany(Question::class);

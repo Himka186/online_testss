@@ -10,6 +10,11 @@ class Option extends Model
 {
     use HasFactory;
     protected $table = 'options';
+    protected $fillable = [
+        'question_id',
+        'option_text',
+        'is_correct',
+    ];
     public function Question(): BelongsTo
     {
         return $this->belongsTo(Question::class);

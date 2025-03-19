@@ -12,7 +12,8 @@ class TestController extends Controller
      */
     public function index()
     {
-        return view('tests', ['tests' => Test::all()]);
+        $tests = Test::orderBy('id', 'asc')->get(); //для сортировки по айди
+        return view('tests', ['tests' => $tests]);
     }
 
     /**
@@ -20,7 +21,7 @@ class TestController extends Controller
      */
     public function create()
     {
-        //
+        return view('test_create');
     }
 
     /**
@@ -28,7 +29,16 @@ class TestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'test_name' => 'required|string|unique:tests|max:255',
+            'test_description' => 'nullable|string'
+            //'created_time' => now()
+        ]);
+
+        $test = new Test($validated);
+        //$test->created_time = now();
+        $test->save();
+        return redirect('/test');
     }
 
     /**
@@ -46,7 +56,9 @@ class TestController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return view('test_edit',[
+           'test' => Test::all()->where('id', $id)->first()
+        ]);
     }
 
     /**
@@ -54,14 +66,25 @@ class TestController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'test_name' => 'required|string|max:255',
+            'test_description' => 'nullable|string',
+        ]);
+        $test = Test::all()->where('id', $id)->first();
+        $test->test_name = $validated['test_name'];
+        $test->test_description = $validated['test_description'];
+        $test->updated_at = now();
+        $test->save();
+        return redirect('/test');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
-        //
+        Test::destroy($id);
+        $redirectUrl = $request->input('redirect_url', '/test');
+        return redirect($redirectUrl);
     }
 }

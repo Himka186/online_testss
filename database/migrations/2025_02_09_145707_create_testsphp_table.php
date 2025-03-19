@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('tests', function (Blueprint $table) {
             $table->id();
             $table->string('test_name');
-            $table->string('test_description');
-            $table->timestampTz('created_time');
+            $table->string('test_description')->nullable();
+            //$table->timestamp('created_time');
+            $table->timestampsTz();
         });
     }
 

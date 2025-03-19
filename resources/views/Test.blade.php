@@ -12,12 +12,16 @@
             <td>ID вопроса</td>
             <td>ID теста</td>
             <td>Текст вопроса</td>
+            <td>Действия</td>
         </thead>
         @foreach($Test->questions as $Question)
             <tr>
                 <td>{{$Question->id}}</td>
                 <td>{{$Question->test_id}}</td>
                 <td>{{$Question->question_text}}</td>
+                <td><a href="{{url('question/destroy/'.$Question->id)}}">Удалить</a>
+                    <a href="{{url('question/edit/'.$Question->id)}}">Редактировать</a>
+                </td>
             </tr>
         @endforeach
     </table>

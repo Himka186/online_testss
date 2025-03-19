@@ -5,7 +5,7 @@
     <title>605-11</title>
 </head>
 <body>
-    <h2>{{$user ? "Тесты пользователя: ".$user->name." ".$user->lastname : 'Неверный ID пользователя' }}</h2>
+    <h2>{{$user ? "Тесты пользователя: ".$user->name." ".$user->lastname : 'Такого пользователя не существует!' }}</h2>
     @if($user)
     <table border="1">
         <thead>
@@ -13,7 +13,7 @@
             <td>Наименование теста</td>
             <td>Описание теста</td>
             <td>Время создания</td>
-            <td>Результат</td>
+            <td>Результат, баллы</td>
         </thead>
         @foreach($user->tests as $Test)
             <tr>

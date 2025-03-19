@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Question;
+use App\Models\Test;
 use Illuminate\Http\Request;
 
 class QuestionController extends Controller
@@ -12,8 +13,9 @@ class QuestionController extends Controller
      */
     public function index()
     {
+        $questions = Question::orderBy('id', 'asc')->get();
         return view('questions', [
-            'questions' => Question::all()
+            'questions' => $questions
         ]);
     }
 
@@ -22,7 +24,10 @@ class QuestionController extends Controller
      */
     public function create()
     {
-        //
+        $tests = Test::orderBy('id', 'asc')->get();
+        return view('question_create', [
+            'tests' => $tests
+        ]);
     }
 
     /**
@@ -30,7 +35,13 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'test_id' => 'integer',
+            'question_text' => 'required|unique:questions|max:255'
+        ]);
+        $question= new Question($validated);
+        $question->save();
+        return redirect('/question');
     }
 
     /**
@@ -48,7 +59,10 @@ class QuestionController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return view('question_edit', [
+            'question' => Question::all()->where('id', $id)->first(),
+            'tests' => Test::all()
+        ]);
     }
 
     /**
@@ -56,14 +70,24 @@ class QuestionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'test_id' => 'integer',
+            'question_text' => 'required|max:255'
+        ]);
+        $question = Question::all()->where('id', $id)->first();
+        $question->test_id = $validated['test_id'];
+        $question->question_text = $validated['question_text'];
+        $question->save();
+        return redirect('/question');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
-        //
+        Question::destroy($id);
+        $redirectUrl = $request->input('redirect_url', '/question');
+        return redirect($redirectUrl);
     }
 }
