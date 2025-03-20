@@ -10,9 +10,10 @@ class TestController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tests = Test::orderBy('id', 'asc')->get(); //для сортировки по айди
+        $perpage = $request->perpage ?? 3;
+        $tests = Test::orderBy('id', 'asc')->paginate($perpage)->withQueryString(); //сортировка + пагинация
         return view('tests', ['tests' => $tests]);
     }
 

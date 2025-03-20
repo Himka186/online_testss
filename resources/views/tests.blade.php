@@ -28,5 +28,12 @@
             </tr>
         @endforeach
     </table>
+<br>
+    <a href='/test/create'>
+        <button type="button">Создать тест</button>
+    </a>
+    <div>
+        {{ $tests->links() }}
+    </div>
 </body>
 </html>
