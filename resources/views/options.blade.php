@@ -26,6 +26,10 @@
         </tr>
     @endforeach
 </table>
+<br>
+<a href='/option/create'>
+    <button type="button">Создать ответ</button>
+</a>
 </body>
 </html>
 

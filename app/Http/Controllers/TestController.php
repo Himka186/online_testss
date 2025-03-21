@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Test;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 
 class TestController extends Controller
@@ -22,6 +23,10 @@ class TestController extends Controller
      */
     public function create()
     {
+        if (! Gate::allows('create-test')) {
+            return redirect('/error')->with('message',
+                'У вас нет разрешения на создание теста' );
+        }
         return view('test_create');
     }
 
@@ -57,6 +62,10 @@ class TestController extends Controller
      */
     public function edit(string $id)
     {
+        if (! Gate::allows('edit-test')) {
+            return redirect('/error')->with('message',
+                'У вас нет разрешения на редактирование теста');
+        }
         return view('test_edit',[
            'test' => Test::all()->where('id', $id)->first()
         ]);
@@ -84,6 +93,11 @@ class TestController extends Controller
      */
     public function destroy(Request $request, string $id)
     {
+        if (! Gate::allows('destroy-test')) {
+            return redirect('/error')->with('message',
+            'У вас нет разрешения на удаление теста');
+        }
+
         Test::destroy($id);
         $redirectUrl = $request->input('redirect_url', '/test');
         return redirect($redirectUrl);

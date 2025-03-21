@@ -6,6 +6,7 @@ use App\Models\Option;
 use App\Models\Question;
 use App\Models\Test;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class OptionController extends Controller
 {
@@ -25,6 +26,10 @@ class OptionController extends Controller
      */
     public function create()
     {
+        if (! Gate::allows('create-option')) {
+            return redirect('/error')->with('message',
+                'У вас нет разрешения на создание ответа');
+        }
         $questions = Question::orderBy('id', 'asc')->get();
         return view('option_create', [
             'questions' => $questions
@@ -61,6 +66,10 @@ class OptionController extends Controller
      */
     public function edit(string $id)
     {
+        if (! Gate::allows('edit-option')) {
+            return redirect('/error')->with('message',
+                'У вас нет разрешения на редактирование ответа');
+        }
         return view('option_edit', [
             'option' => Option::all()->where('id', $id)->first(),
             'questions' => Question::all()
@@ -91,6 +100,10 @@ class OptionController extends Controller
      */
     public function destroy(Request $request, string $id)
     {
+        if (! Gate::allows('destroy-option')) {
+            return redirect('/error')->with('message',
+                'У вас нет разрешения на удаление ответа');
+        }
         Option::destroy($id);
         $redirectUrl = $request->input('redirect_url', '/option');
         return redirect($redirectUrl);

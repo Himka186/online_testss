@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Question;
 use App\Models\Test;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class QuestionController extends Controller
 {
@@ -24,6 +25,10 @@ class QuestionController extends Controller
      */
     public function create()
     {
+        if (! Gate::allows('create-question')) {
+            return redirect('/error')->with('message',
+                'У вас нет разрешения на создание вопроса');
+        }
         $tests = Test::orderBy('id', 'asc')->get();
         return view('question_create', [
             'tests' => $tests
@@ -59,6 +64,10 @@ class QuestionController extends Controller
      */
     public function edit(string $id)
     {
+        if (! Gate::allows('edit-question')) {
+            return redirect('/error')->with('message',
+                'У вас нет разрешения на редактирование вопроса');
+        }
         return view('question_edit', [
             'question' => Question::all()->where('id', $id)->first(),
             'tests' => Test::all()
@@ -86,6 +95,10 @@ class QuestionController extends Controller
      */
     public function destroy(Request $request, string $id)
     {
+        if (! Gate::allows('destroy-question')) {
+            return redirect('/error')->with('message',
+                'У вас нет разрешения на удаление вопроса');
+        }
         Question::destroy($id);
         $redirectUrl = $request->input('redirect_url', '/question');
         return redirect($redirectUrl);

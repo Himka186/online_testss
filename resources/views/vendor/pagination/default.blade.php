@@ -46,9 +46,9 @@
     Элементов на странице:
     <form method="get" action={{url('test')}}>
         <select name="perpage">
-            <option value="2" @if($paginator->perPage() == 2) selected @endif >2</option>
             <option value="3" @if($paginator->perPage() == 3) selected @endif >3</option>
             <option value="4" @if($paginator->perPage() == 4) selected @endif >4</option>
+            <option value="5" @if($paginator->perPage() == 5) selected @endif >5</option>
         </select>
         <input type="submit" value="Изменить">
     </form>

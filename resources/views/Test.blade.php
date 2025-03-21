@@ -26,5 +26,9 @@
         @endforeach
     </table>
     @endif
+    <br>
+    <a href='/question/create'>
+        <button type="button">Создать вопрос</button>
+    </a>
 </body>
 </html>

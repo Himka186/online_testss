@@ -4,6 +4,7 @@ use App\Http\Controllers\OptionController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LoginController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,29 +21,37 @@ Route::get('/hello', function () {
 //    return response()->json($questions);
 //});
 
-Route::get('/test', [TestController::class, 'index']);
-Route::post('/test', [TestController::class, 'store']);
-Route::get('/test/create', [TestController::class, 'create']);
-Route::get('/test/edit/{id}', [TestController::class, 'edit']);
-Route::post('/test/update/{id}', [TestController::class, 'update']);
-Route::get('/test/destroy/{id}', [TestController::class, 'destroy']);
-Route::get('/test/{id}', [TestController::class, 'show']);
+Route::get('/test', [TestController::class, 'index'])->middleware('auth');
+Route::post('/test', [TestController::class, 'store'])->middleware('auth');
+Route::get('/test/create', [TestController::class, 'create'])->middleware('auth');
+Route::get('/test/edit/{id}', [TestController::class, 'edit'])->middleware('auth');
+Route::post('/test/update/{id}', [TestController::class, 'update'])->middleware('auth');
+Route::get('/test/destroy/{id}', [TestController::class, 'destroy'])->middleware('auth');
+Route::get('/test/{id}', [TestController::class, 'show'])->middleware('auth');
 
-Route::get('/question', [QuestionController::class, 'index']);
-Route::get('/question/create', [QuestionController::class, 'create']);
-Route::post('/question', [QuestionController::class, 'store']);
-Route::get('/question/edit/{id}', [QuestionController::class, 'edit']);
-Route::post('/question/update/{id}', [QuestionController::class, 'update']);
-Route::get('/question/destroy/{id}', [QuestionController::class, 'destroy']);
-Route::get('/question/{id}', [QuestionController::class, 'show']);
+Route::get('/question', [QuestionController::class, 'index'])->middleware('auth');
+Route::get('/question/create', [QuestionController::class, 'create'])->middleware('auth');
+Route::post('/question', [QuestionController::class, 'store'])->middleware('auth');
+Route::get('/question/edit/{id}', [QuestionController::class, 'edit'])->middleware('auth');
+Route::post('/question/update/{id}', [QuestionController::class, 'update'])->middleware('auth');
+Route::get('/question/destroy/{id}', [QuestionController::class, 'destroy'])->middleware('auth');
+Route::get('/question/{id}', [QuestionController::class, 'show'])->middleware('auth');
 
-Route::get('/option', [OptionController::class, 'index']);
-Route::get('/option/create', [OptionController::class, 'create']);
-Route::post('/option', [OptionController::class, 'store']);
-Route::get('/option/edit/{id}', [OptionController::class, 'edit']);
-Route::post('/option/update/{id}', [OptionController::class, 'update']);
-Route::get('/option/destroy/{id}', [OptionController::class, 'destroy']);
-Route::get('/option/{id}', [OptionController::class, 'show']);
+Route::get('/option', [OptionController::class, 'index'])->middleware('auth');
+Route::get('/option/create', [OptionController::class, 'create'])->middleware('auth');
+Route::post('/option', [OptionController::class, 'store'])->middleware('auth');
+Route::get('/option/edit/{id}', [OptionController::class, 'edit'])->middleware('auth');
+Route::post('/option/update/{id}', [OptionController::class, 'update'])->middleware('auth');
+Route::get('/option/destroy/{id}', [OptionController::class, 'destroy'])->middleware('auth');
+Route::get('/option/{id}', [OptionController::class, 'show'])->middleware('auth');
 
-Route::get('/user', [UserController::class, 'index']);
-Route::get('/user/{id}', [UserController::class, 'show']);
+Route::get('/user', [UserController::class, 'index'])->middleware('auth');
+Route::get('/user/{id}', [UserController::class, 'show'])->middleware('auth');
+
+Route::get('/login', [LoginController::class, 'login'])->name('login');
+Route::get('/logout', [LoginController::class, 'logout']);
+Route::post('/auth', [LoginController::class, 'authenticate']);
+
+Route::get('/error', function (){
+    return view('error', ['message' => session('message')]);
+});
