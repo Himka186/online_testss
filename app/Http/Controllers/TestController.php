@@ -24,8 +24,8 @@ class TestController extends Controller
     public function create()
     {
         if (! Gate::allows('create-test')) {
-            return redirect('/error')->with('message',
-                'У вас нет разрешения на создание теста' );
+            return redirect()->intended('/test')->withErrors(['error' =>
+                'У вас нет разрешения на создание теста']);
         }
         return view('test_create');
     }
@@ -44,7 +44,8 @@ class TestController extends Controller
         $test = new Test($validated);
         //$test->created_time = now();
         $test->save();
-        return redirect('/test');
+        return redirect()->intended('/test')->with(['success' =>
+        'Вы успешно создали тест!']);
     }
 
     /**
@@ -52,9 +53,9 @@ class TestController extends Controller
      */
     public function show(string $id)
     {
-        return view('Test', [
-            'Test' => Test::all()->where('id', $id)->first()
-        ]);
+        $test = Test::findOrFail($id);
+        $backUrl = route('test.index');
+        return view('Test', ['Test' => $test, 'backUrl' => $backUrl]);
     }
 
     /**
@@ -63,8 +64,8 @@ class TestController extends Controller
     public function edit(string $id)
     {
         if (! Gate::allows('edit-test')) {
-            return redirect('/error')->with('message',
-                'У вас нет разрешения на редактирование теста');
+            return redirect()->intended('/test')->withErrors(['error' =>
+                'У вас нет разрешения на редактирование теста']);
         }
         return view('test_edit',[
            'test' => Test::all()->where('id', $id)->first()
@@ -85,7 +86,8 @@ class TestController extends Controller
         $test->test_description = $validated['test_description'];
         $test->updated_at = now();
         $test->save();
-        return redirect('/test');
+        return redirect()->intended('/test')->with(['success' =>
+            'Вы успешно обновили информацию о тесте!']);
     }
 
     /**
@@ -94,12 +96,13 @@ class TestController extends Controller
     public function destroy(Request $request, string $id)
     {
         if (! Gate::allows('destroy-test')) {
-            return redirect('/error')->with('message',
-            'У вас нет разрешения на удаление теста');
+            return redirect()->intended('/test')->withErrors(['error' =>
+                'У вас нет разрешения на удаление теста']);
         }
 
         Test::destroy($id);
         $redirectUrl = $request->input('redirect_url', '/test');
-        return redirect($redirectUrl);
+        return redirect()->intended($redirectUrl)->with(['success' =>
+            'Вы успешно удалили тест']);
     }
 }

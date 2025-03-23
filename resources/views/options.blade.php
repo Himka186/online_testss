@@ -1,12 +1,7 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>605-11 Himochkin</title>
-</head>
-<body>
+@extends('layout')
+@section('content')
 <h2>Варианты всех ответов на все вопросы</h2>
-<table border="1">
+<table class="table table-striped-columns">
     <thead>
     <td>ID вопроса</td>
     <td>ID ответа</td>
@@ -20,16 +15,15 @@
             <td>{{$Option->id}}</td>
             <td>{{$Option->option_text}}</td>
             <td>{{$Option->is_correct}}</td>
-            <td><a href="{{url('option/destroy/'.$Option->id)}}">Удалить</a>
-                <a href="{{url('option/edit/'.$Option->id)}}">Редактировать</a>
+            <td><a href="{{url('option/destroy/'.$Option->id)}}" class="btn btn-danger btn-sm">Удалить</a>
+                <a href="{{url('option/edit/'.$Option->id)}}" class="btn btn-secondary btn-sm">Редактировать</a>
             </td>
         </tr>
     @endforeach
 </table>
 <br>
-<a href='/option/create'>
-    <button type="button">Создать ответ</button>
-</a>
-</body>
-</html>
+<form action="/option/create" class="inline add-record">
+    <button class="btn btn-success">Создать ответ</button>
+</form>
+@endsection
 

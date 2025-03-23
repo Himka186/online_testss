@@ -1,31 +1,31 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>605-11</title>
-</head>
-<body>
-    <h2>{{$user ? "Тесты пользователя: ".$user->name." ".$user->lastname : 'Такого пользователя не существует!' }}</h2>
+@extends('layout')
+@section('content')
+    <h2>{{ $user ? "Тесты пользователя: " . $user->name . " " . $user->lastname : 'Такого пользователя не существует!' }}</h2>
+
     @if($user)
-    <table border="1">
-        <thead>
-            <td>ID теста</td>
-            <td>Наименование теста</td>
-            <td>Описание теста</td>
-            <td>Время создания</td>
-            <td>Результат, баллы</td>
-        </thead>
-        @foreach($user->tests as $Test)
+        <table class="table table-striped-columns">
+            <thead>
             <tr>
-                <td>{{$Test->id}}</td>
-                <td>{{$Test->test_name}}</td>
-                <td>{{$Test->test_description}}</td>
-                <td>{{$Test->created_time}}</td>
-                <td>{{$Test->pivot->score}}</td>
+                <th>ID теста</th>
+                <th>Наименование теста</th>
+                <th>Описание теста</th>
+                <th>Результат, баллы</th>
             </tr>
-        @endforeach
-    </table>
-    <h2>{{"Итого баллов за тесты: ".$total->total}}</h2>
+            </thead>
+            <tbody>
+            @foreach($user->tests as $Test)
+                <tr>
+                    <td>{{ $Test->id }}</td>
+                    <td>{{ $Test->test_name }}</td>
+                    <td>{{ $Test->test_description }}</td>
+                    <td>{{ $Test->pivot->score }}</td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+
+        <h3 class="border p-3 text-center bg-dark">
+            {{ "Итого баллов за тесты: " . $total->total }}
+        </h3>
     @endif
-</body>
-</html>
+@endsection

@@ -18,7 +18,7 @@ class User extends Authenticatable
 
     public function tests(): BelongsToMany
     {
-        return $this->belongsToMany(Test::class, 'results')->withPivot( 'score');
+        return $this->belongsToMany(Test::class, 'results')->withPivot( 'score', 'time_finished')->withTimestamps();
     }
 
 
@@ -33,6 +33,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'lastname',
         'email',
         'password',
         'is_admin',

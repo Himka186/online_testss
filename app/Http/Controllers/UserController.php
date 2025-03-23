@@ -54,8 +54,9 @@ class UserController extends Controller
             ->where('users.id', $id)
             ->first();
 
+        $user = User::findOrFail($id);
         return view('user', [
-            'user' => User::all()->where('id', $id)->first(),
+            'user' => $user, //User::all()->where('id', $id)->first(),
             'total'=> $total
         //    'user' => 123
         ]);

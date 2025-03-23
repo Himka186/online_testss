@@ -1,26 +1,28 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>605-11 Himochkin</title>
-</head>
-<body>
-<h2>Список пользователей:</h2>
-<table border="1">
-    <thead>
-    <td>ID пользователя</td>
-    <td>Имя</td>
-    <td>Фамилия</td>
-    <td>Email</td>
-    </thead>
-    @foreach($users as $User)
+@extends('layout')
+@section('content')
+    <h2>Список пользователей:</h2>
+    <table class="table table-striped-columns">
+        <thead>
         <tr>
-            <td>{{$User->id}}</td>
-            <td>{{$User->name}}</td>
-            <td>{{$User->lastname}}</td>
-            <td>{{$User->email}}</td>
+            <th>ID пользователя</th>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Email</th>
         </tr>
-    @endforeach
-</table>
-</body>
-</html>
+        </thead>
+        <tbody>
+        @foreach($users as $User)
+            <tr>
+                <td>{{ $User->id }}</td>
+                <td>
+                    <a href="{{ route('user.show', ['id' => $User->id]) }}" class="btn btn-secondary">
+                    {{ $User->name }}
+                    </a>
+                </td>
+                <td>{{ $User->lastname }}</td>
+                <td>{{ $User->email }}</td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
+@endsection

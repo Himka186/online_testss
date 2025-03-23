@@ -1,12 +1,7 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>605-11 Himochkin</title>
-</head>
-<body>
+@extends('layout')
+@section('content')
     <h2>Список тестов:</h2>
-    <table border="1">
+    <table class="table table-striped-columns">
         <thead>
         <td>ID теста</td>
         <td>Наименование теста</td>
@@ -18,22 +13,25 @@
         @foreach($tests as $Test)
             <tr>
                 <td>{{$Test->id}}</td>
-                <td>{{$Test->test_name}}</td>
+                <td>
+                    <a href="{{ route('test.show', ['id' => $Test->id]) }}" class="btn btn-secondary">
+                    {{$Test->test_name}}
+                    </a>
+                </td>
                 <td>{{$Test->test_description}}</td>
                 <td>{{$Test->created_at}}</td>
                 <td>{{$Test->updated_at}}</td>
-                <td><a href="{{url('test/destroy/'.$Test->id)}}">Удалить</a>
-                    <a href="{{url('test/edit/'.$Test->id)}}">Изменить</a>
+                <td><a href="{{url('test/destroy/'.$Test->id)}}" class="btn btn-danger btn-sm">Удалить</a>
+                    <a href="{{url('test/edit/'.$Test->id)}}" class="btn btn-secondary btn-sm">Изменить</a>
                 </td>
             </tr>
         @endforeach
     </table>
-<br>
-    <a href='/test/create'>
-        <button type="button">Создать тест</button>
-    </a>
-    <div>
-        {{ $tests->links() }}
+    <form action="/test/create" class="inline add-record">
+        <button class="btn btn-success">Создать тест</button>
+    </form>
+    <br>
+    <div class="pagination">
+        {{ $tests->links('bootstrap-5') }}
     </div>
-</body>
-</html>
+@endsection

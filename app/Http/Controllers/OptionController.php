@@ -24,15 +24,18 @@ class OptionController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
+        $question_id = $request->input('question_id');
+
         if (! Gate::allows('create-option')) {
-            return redirect('/error')->with('message',
-                'У вас нет разрешения на создание ответа');
+            return redirect()->route('question.show', ['id' => $question_id])->withErrors(['error' =>
+                'У вас нет разрешения на создание ответа']);
         }
         $questions = Question::orderBy('id', 'asc')->get();
         return view('option_create', [
-            'questions' => $questions
+            'questions' => $questions,
+            'question_id' => $question_id,
         ]);
     }
 
@@ -48,7 +51,8 @@ class OptionController extends Controller
         ]);
         $option= new Option($validated);
         $option->save();
-        return redirect('/option');
+        return redirect()->route('question.show', ['id' => $validated['question_id']])->with(['success' =>
+            'Вы успешно создали вопрос!']);
     }
 
     /**
@@ -56,9 +60,8 @@ class OptionController extends Controller
      */
     public function show(string $id)
     {
-        return view('Option', [
-            'Option' => Option::all()->where('id', $id)->first()
-        ]);
+        $option = Option::findOrFail($id);
+        return view('Option', ['Option' => $option]);
     }
 
     /**
@@ -66,9 +69,12 @@ class OptionController extends Controller
      */
     public function edit(string $id)
     {
+        $option = Option::findOrFail($id);
+        $question_id = $option->question_id;
+
         if (! Gate::allows('edit-option')) {
-            return redirect('/error')->with('message',
-                'У вас нет разрешения на редактирование ответа');
+            return redirect()->route('question.show', ['id' => $question_id])->withErrors(['error' =>
+                'У вас нет разрешения на редактирование ответа']);
         }
         return view('option_edit', [
             'option' => Option::all()->where('id', $id)->first(),
@@ -92,7 +98,8 @@ class OptionController extends Controller
         $option->option_text = $validated['option_text'];
         $option->is_correct = $validated['is_correct'];
         $option->save();
-        return redirect('/option');
+        return redirect()->route('question.show', ['id' => $validated['question_id']])->with(['success' =>
+            'Вы успешно редактировали вопрос!']);
     }
 
     /**
@@ -100,12 +107,17 @@ class OptionController extends Controller
      */
     public function destroy(Request $request, string $id)
     {
+        $option = Option::find($id);
+        $question_id = $option->question_id;
+
         if (! Gate::allows('destroy-option')) {
-            return redirect('/error')->with('message',
-                'У вас нет разрешения на удаление ответа');
+            return redirect()->route('question.show', ['id' => $question_id])->withErrors(['error' =>
+                'У вас нет разрешения на удаление ответа']);
         }
+
         Option::destroy($id);
-        $redirectUrl = $request->input('redirect_url', '/option');
-        return redirect($redirectUrl);
+//        $redirectUrl = $request->input('redirect_url', '/option');
+        return redirect()->route('question.show', ['id' => $question_id])->with(['success' =>
+            'Вы успешно удалили вопрос!']);
     }
 }
